@@ -43,18 +43,52 @@ rescue ex : File::NotFoundError
   exit 1
 end
 
-puts "🔍 Analyzing NT hashes...\n\n"
+puts "🔍 Analyzing NT hashes...\n"
 
 duplicates_found = false
+duplicate_groups = [] of Array(String)
 
 nt_hash_map.each do |_, usernames|
   if usernames.size > 1
     duplicates_found = true
-    user_text = usernames.join(", ")
-    puts "⚠️ Duplicate password found: #{user_text}"
+    duplicate_groups << usernames
   end
 end
 
-unless duplicates_found
+if duplicates_found
+  total_duplicates = duplicate_groups.size
+  total_affected_users = duplicate_groups.sum(&.size)
+  
+  puts "📊 Results: Found #{total_duplicates} duplicate password groups affecting #{total_affected_users} accounts\n"
+  
+  duplicate_groups.sort_by(&.size).reverse.each_with_index do |usernames, i|
+    group_number = i + 1
+    puts "╔═ #{usernames.size} accounts with identical passwords ══"
+    
+    # Break the usernames into chunks for more compact display
+    line = ""
+    usernames.each_with_index do |username, j|
+      if line.empty?
+        line = "║ • #{username}"
+      else
+        # Check if adding this username would make the line too long
+        # If so, print the current line and start a new one
+        if line.size + username.size + 5 > 80
+          puts line
+          line = "║ • #{username}"
+        else
+          line += " │ #{username}"  # Using pipe character for better visual separation
+        end
+      end
+    end
+    
+    # Print any remaining usernames
+    puts line unless line.empty?
+    puts "╚═══════════════════════════════════════════════════════════════════════\n"
+  end
+  
+  puts "⚠️ WARNING: Users in the same group share identical passwords!"
+  puts "🔒 Recommendation: Ensure each account has a unique, strong password."
+else
   puts "✅ No users with duplicate passwords were found."
 end
