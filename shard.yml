@@ -1,0 +1,13 @@
+name: hash-sentinel
+version: 0.1.0
+
+authors:
+  - FLX <flx@evait.de>
+
+targets:
+  hash-sentinel:
+    main: src/hash_sentinel.cr
+
+crystal: ">= 1.0.0"
+
+license: MIT
