@@ -94,7 +94,7 @@ if duplicates_found
       if line.empty?
         line = "║ • #{username}"
       else
-        if line.size + username.size + 5 > 80
+        if line.size + username.size + 5 > 120
           puts line
           line = "║ • #{username}"
         else
