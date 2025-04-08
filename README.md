@@ -57,6 +57,22 @@ shards install
 
 Then follow the build instructions below.
 
+### Option 3: AUR (Arch Linux User Repository)
+
+For Arch Linux users, Hash Sentinel is available in the AUR:
+
+```bash
+# Install using your preferred AUR helper
+paru -S hash-sentinel
+
+# Or with yay
+yay -S hash-sentinel
+```
+
+Package link: [https://aur.archlinux.org/packages/hash-sentinel](https://aur.archlinux.org/packages/hash-sentinel)
+
+> 😎 *Note: No packages for other distros yet because real pentesters use Arch Linux anyway* 😉
+
 ---
 
 ## 🔧 Building from Source
