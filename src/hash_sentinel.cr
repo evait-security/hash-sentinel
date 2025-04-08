@@ -62,27 +62,47 @@ if duplicates_found
   puts "📊 Results: Found #{total_duplicates} duplicate password groups affecting #{total_affected_users} accounts\n"
   
   duplicate_groups.sort_by(&.size).reverse.each_with_index do |usernames, i|
-    group_number = i + 1
-    puts "╔═ #{usernames.size} accounts with identical passwords ══"
+    # Extract unique domains from this group - normalize to lowercase
+    domains = Set(String).new
+    processed_usernames = usernames.map do |username|
+      if username.includes?("\\")
+        parts = username.split("\\", 2)
+        domains << parts[0].downcase  # Convert domain to lowercase for uniqueness
+        parts[1] # Return just the username part without domain
+      else
+        username # Return the full username if no domain
+      end
+    end
     
-    # Break the usernames into chunks for more compact display
+    # Format domain information for the header
+    domain_text = ""
+    if !domains.empty?
+      domain_list = domains.to_a.sort.join(", ")
+      # Truncate if too long
+      if domain_list.size > 40
+        domain_text = " [Domains: #{domain_list[0..37]}...]"
+      else
+        domain_text = " [Domains: #{domain_list}]"
+      end
+    end
+    
+    puts "╔═ #{usernames.size} accounts with identical passwords#{domain_text} ══"
+    
+    # Display usernames without domains
     line = ""
-    usernames.each_with_index do |username, j|
+    processed_usernames.each do |username|
       if line.empty?
         line = "║ • #{username}"
       else
-        # Check if adding this username would make the line too long
-        # If so, print the current line and start a new one
         if line.size + username.size + 5 > 80
           puts line
           line = "║ • #{username}"
         else
-          line += " │ #{username}"  # Using pipe character for better visual separation
+          line += " │ #{username}"
         end
       end
     end
     
-    # Print any remaining usernames
     puts line unless line.empty?
     puts "╚═══════════════════════════════════════════════════════════════════════\n"
   end
