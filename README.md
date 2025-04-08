@@ -1,12 +1,12 @@
 ## 🔒 Hash Sentinel
 
-> **Hash Sentinel** is a handy and efficient Crystal tool designed to quickly identify users in an Active Directory environment who share identical NT hashes (passwords). It’s a powerful addition to a penetration tester’s toolkit, especially useful during post-exploitation phases, domain takeovers, and password policy assessments.
+> **Hash Sentinel** is a handy and efficient Crystal tool designed to quickly identify users in an Active Directory environment who share identical NT hashes (passwords). It's a powerful addition to a penetration tester's toolkit, especially useful during post-exploitation phases, domain takeovers, and password policy assessments.
 
 ---
 
 ## 📖 Introduction
 
-When conducting penetration tests, especially after compromising a Windows domain environment, it’s crucial to analyze password usage across domain accounts. Identifying users with identical passwords helps assess password hygiene, detect shared administrative passwords, and pinpoint critical security issues.
+When conducting penetration tests, especially after compromising a Windows domain environment, it's crucial to analyze password usage across domain accounts. Identifying users with identical passwords helps assess password hygiene, detect shared administrative passwords, and pinpoint critical security issues.
 
 After you've successfully taken control of an Active Directory domain (for example, by obtaining Domain Admin credentials), you typically extract the NTDS database dump. Here's a typical scenario to generate such a dump with Impacket's `secretsdump.py`:
 
@@ -26,15 +26,36 @@ Now, to detect users sharing the same password efficiently, **Hash Sentinel** he
 
 ## 🚀 Installation
 
-Ensure Crystal is installed ([https://crystal-lang.org/install/](https://crystal-lang.org/install/)).
+### Option 1: Download Precompiled Binary (Recommended)
+
+The fastest way to get started is to download the precompiled binary from GitHub releases:
+
+```bash
+# Download the latest binary
+wget https://github.com/evait-security/hash-sentinel/releases/download/latest/hash-sentinel
+
+# Make it executable
+chmod +x hash-sentinel
+
+# Run it
+./hash-sentinel -f enabled_users_dump.ntds
+```
+
+This binary is automatically built using GitHub Actions and is available for Linux systems.
+
+### Option 2: Build from Source
+
+If you prefer to build from source, ensure Crystal is installed ([https://crystal-lang.org/install/](https://crystal-lang.org/install/)).
 
 Clone this repository:
 
 ```bash
-git clone https://github.com/your_username/hash-sentinel.git
+git clone https://github.com/evait-security/hash-sentinel.git
 cd hash-sentinel
 shards install
 ```
+
+Then follow the build instructions below.
 
 ---
 
@@ -52,7 +73,7 @@ Now, the binary `hash-sentinel` will be created in your project directory.
 
 ## ▶️ Running the Binary
 
-After building the binary, you can easily analyze your NT hash dumps. Run it using the following command structure:
+After obtaining the binary (either by downloading it or building it), you can easily analyze your NT hash dumps. Run it using the following command structure:
 
 ```bash
 ./hash-sentinel -f enabled_users_dump.ntds
@@ -63,6 +84,7 @@ After building the binary, you can easily analyze your NT hash dumps. Run it usi
 | Parameter | Description                                 | Example                        |
 |-----------|---------------------------------------------|--------------------------------|
 | `-f`      | Path to input file containing user hashes   | `-f enabled_users_dump.ntds`   |
+| `-w`      | Path to wordlist for password identification| `-w common_passwords.txt`      |
 | `-h`      | Display help information                    | `-h`                           |
 
 ---
