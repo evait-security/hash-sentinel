@@ -28,7 +28,7 @@ def calculate_nt_hash(password : String) : String
   # Convert to UTF-16LE (little endian)
   utf16_bytes = encode_utf16le(password)
   # Calculate MD4 hash using our custom function
-  md4_hash(utf16_bytes).upcase  # Return uppercase to match expected format
+  md4_hash(utf16_bytes).upcase  # Return uppercase for display purposes
 end
 
 # Corrected UTF-16LE encoding function
@@ -226,7 +226,7 @@ begin
     parts = line.split(":")
     if parts.size >= 4  # Make sure there are at least 4 parts
       username = parts[0]
-      nt_hash = parts[3]
+      nt_hash = parts[3].downcase  # Convert to lowercase for consistent keys
 
       nt_hash_map[nt_hash] << username
     else
@@ -261,7 +261,7 @@ if !wordlist_path.empty?
           password = line.strip
           next if password.empty?
           
-          hash = calculate_nt_hash(password)
+          hash = calculate_nt_hash(password).downcase  # Convert to lowercase for consistent keys
           password_matches[hash] = password
           word_count += 1
         rescue ex
@@ -326,7 +326,7 @@ if duplicates_found
     # Add plaintext password to header if found
     password_text = ""
     if !wordlist_path.empty? && password_matches.size > 0
-      nt_hash = nt_hash_map.key_for(usernames)
+      nt_hash = nt_hash_map.key_for(usernames).downcase  # Convert to lowercase for lookup
       if password_matches.has_key?(nt_hash)
         plaintext = password_matches[nt_hash]
         password_text = " [Password: #{plaintext}]"
